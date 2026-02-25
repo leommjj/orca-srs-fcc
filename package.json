@@ -1,0 +1,31 @@
+{
+  "name": "orca-plugin-template",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "cross-env NODE_ENV=production tsc && vite build",
+    "build:watch": "cross-env NODE_ENV=production tsc && vite build --watch",
+    "test": "vitest run",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "valtio": "^1.13.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitest/coverage-v8": "^4.0.16",
+    "cross-env": "^10.1.0",
+    "fast-check": "^4.4.0",
+    "rollup-plugin-external-globals": "^0.9.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0",
+    "vitest": "^4.0.16"
+  },
+  "dependencies": {
+    "ts-fsrs": "^5.2.3"
+  }
+}

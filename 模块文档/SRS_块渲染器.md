@@ -1,0 +1,138 @@
+# SRS 块渲染器模块
+
+## 概述
+
+本模块实现 SRS 卡片在 Orca 编辑器中的自定义渲染，将带有 `_repr.type = "srs.card"` 的块以卡片样式展示。
+
+### 核心价值
+
+- 编辑器内直接显示卡片
+- 支持快速评分
+- 可在原位编辑题目和答案
+
+## 技术实现
+
+### 核心文件
+
+- [SrsCardBlockRenderer.tsx](file:///d:/orca插件/虎鲸标记%20内置闪卡/src/components/SrsCardBlockRenderer.tsx)
+
+### 渲染器注册
+
+```typescript
+orca.renderers.registerBlock(
+  "srs.card", // 块类型
+  false, // 不可作为纯文本编辑
+  SrsCardBlockRenderer, // 渲染器组件
+  [], // 无需 asset 字段
+  false // 不使用自定义子块布局
+);
+```
+
+### 组件 Props
+
+| 属性        | 类型   | 说明     |
+| ----------- | ------ | -------- |
+| panelId     | string | 面板 ID  |
+| blockId     | DbId   | 块 ID    |
+| rndId       | string | 渲染 ID  |
+| blockLevel  | number | 块层级   |
+| indentLevel | number | 缩进层级 |
+| mirrorId    | DbId   | 镜像 ID  |
+| front       | string | 题目文本 |
+| back        | string | 答案文本 |
+
+### 界面结构
+
+```
+┌─────────────────────────────────────────┐
+│ 🎴 SRS 记忆卡片                         │
+├─────────────────────────────────────────┤
+│ 题目：                          [编辑]  │
+│ ┌─────────────────────────────────────┐ │
+│ │ What is the capital of France?     │ │
+│ └─────────────────────────────────────┘ │
+│                                         │
+│            [ 显示答案 ]                 │
+│                                         │
+├─────────────────────────────────────────┤
+│ 下次复习：2024-01-15 10:00              │
+│ 间隔：5 天，稳定度：8.5，难度：4.2      │
+│ 复习次数：12，遗忘：1                   │
+└─────────────────────────────────────────┘
+```
+
+### 功能特性
+
+#### 1. 答案揭示
+
+- 初始隐藏答案
+- 点击"显示答案"揭示
+- 揭示后显示评分按钮
+
+#### 2. 内联编辑
+
+- 题目和答案支持点击编辑
+- 使用 textarea 编辑
+- 保存/取消按钮
+
+#### 3. 快速评分
+
+- 四个评分按钮：Again / Hard / Good / Easy
+- 评分后自动隐藏答案
+- 显示通知提示下次复习时间
+
+#### 4. 状态显示
+
+- 下次复习时间
+- 间隔天数
+- 稳定度和难度
+- 复习次数和遗忘次数
+
+### 状态管理
+
+```typescript
+const [showAnswer, setShowAnswer] = useState(false);
+const [isEditingFront, setIsEditingFront] = useState(false);
+const [isEditingBack, setIsEditingBack] = useState(false);
+```
+
+### 评分处理
+
+```typescript
+const handleGrade = async (grade: Grade) => {
+  const result = await updateSrsState(blockId, grade);
+  setShowAnswer(false);
+  orca.notify("success", `评分已记录：${grade}`);
+};
+```
+
+## 样式设计
+
+### 颜色使用
+
+- 背景：`var(--orca-color-bg-1)` / `var(--orca-color-bg-2)`
+- 边框：`var(--orca-color-border-1)`
+- 答案区左边框：`var(--orca-color-primary-5)`
+
+### 按钮样式
+
+| 按钮  | variant   | 说明     |
+| ----- | --------- | -------- |
+| Again | dangerous | 红色警告 |
+| Hard  | soft      | 柔和灰   |
+| Good  | solid     | 主色实心 |
+| Easy  | solid     | 主色高亮 |
+
+## 扩展点
+
+1. **折叠模式**：可扩展紧凑显示模式
+2. **预览悬停**：可扩展鼠标悬停预览答案
+3. **键盘操作**：可扩展快捷键支持
+
+## 相关文件
+
+| 文件                                                                                                        | 说明       |
+| ----------------------------------------------------------------------------------------------------------- | ---------- |
+| [SrsCardBlockRenderer.tsx](file:///d:/orca插件/虎鲸标记%20内置闪卡/src/components/SrsCardBlockRenderer.tsx) | 渲染器组件 |
+| [storage.ts](file:///d:/orca插件/虎鲸标记%20内置闪卡/src/srs/storage.ts)                                    | 状态更新   |
+| [main.ts](file:///d:/orca插件/虎鲸标记%20内置闪卡/src/main.ts)                                              | 渲染器注册 |

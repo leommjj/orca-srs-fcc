@@ -1,0 +1,175 @@
+/**
+ * UI 组件注册模块
+ *
+ * 负责注册工具栏按钮、斜杠命令和顶部栏按钮
+ * 
+ * 注意：Orca 当前版本不支持自定义快捷键注册，
+ * 当前编辑器工具栏仅保留"填空卡"入口，其它命令通过斜杠命令触发。
+ */
+
+import React from "react"
+import { AIDialogMount } from "../../components/AIDialogMount"
+import { IRBookDialogMount } from "../../components/IRBookDialogMount"
+
+export function registerUIComponents(pluginName: string): void {
+  orca.headbar.registerHeadbarButton(`${pluginName}.aiDialogMount`, () => (
+    <AIDialogMount pluginName={pluginName} />
+  ))
+
+  orca.headbar.registerHeadbarButton(`${pluginName}.irBookDialogMount`, () => (
+    <IRBookDialogMount pluginName={pluginName} />
+  ))
+  
+  // 复习按钮 - 开始复习会话
+  orca.headbar.registerHeadbarButton(`${pluginName}.reviewButton`, () => (
+    <orca.components.Button
+      variant="plain"
+      tabIndex={-1}
+      onClick={() => orca.commands.invokeCommand(`${pluginName}.openOldReviewPanel`)}
+      title="开始闪卡复习"
+    >
+      <i className="ti ti-brain orca-headbar-icon" />
+    </orca.components.Button>
+  ))
+
+  // Flash Home 按钮 - 打开闪卡主页
+  orca.headbar.registerHeadbarButton(`${pluginName}.flashHomeButton`, () => (
+    <orca.components.Button
+      variant="plain"
+      tabIndex={-1}
+      onClick={() => orca.commands.invokeCommand(`${pluginName}.openFlashcardHome`)}
+      title="打开 Flash Home"
+    >
+      <i className="ti ti-home orca-headbar-icon" />
+    </orca.components.Button>
+  ))
+
+  // 渐进阅读按钮 - 打开渐进阅读面板
+  orca.headbar.registerHeadbarButton(`${pluginName}.incrementalReadingButton`, () => (
+    <orca.components.Button
+      variant="plain"
+      tabIndex={-1}
+      onClick={() => orca.commands.invokeCommand(`${pluginName}.startIncrementalReadingSession`)}
+      title="打开渐进阅读"
+    >
+      <i className="ti ti-book-2 orca-headbar-icon" />
+    </orca.components.Button>
+  ))
+
+  // ============ 工具栏按钮 ============
+  
+  // 创建同序挖空按钮
+  orca.toolbar.registerToolbarButton(`${pluginName}.clozeSameNumberButton`, {
+    icon: "ti ti-code-dots",
+    tooltip: "创建同序 Cloze 填空",
+    command: `${pluginName}.createClozeSameNumber`
+  })
+  
+  // 创建异序挖空按钮
+  orca.toolbar.registerToolbarButton(`${pluginName}.clozeButton`, {
+    icon: "ti ti-code-plus",
+    tooltip: "创建 Cloze 填空",
+    command: `${pluginName}.createCloze`
+  })
+  
+  // 清除挖空格式按钮
+  orca.toolbar.registerToolbarButton(`${pluginName}.clearClozeButton`, {
+    icon: "ti ti-eraser",
+    tooltip: "清除挖空格式",
+    command: `${pluginName}.clearClozeFormat`
+  })
+
+  // ============ 斜杠命令 ============
+  
+  orca.slashCommands.registerSlashCommand(`${pluginName}.makeCard`, {
+    icon: "ti ti-card-plus",
+    group: "SRS",
+    title: "转换为记忆卡片",
+    command: `${pluginName}.makeCardFromBlock`
+  })
+
+  orca.slashCommands.registerSlashCommand(`${pluginName}.listCard`, {
+    icon: "ti ti-list-details",
+    group: "SRS",
+    title: "列表卡（子块作为条目）",
+    command: `${pluginName}.createListCard`
+  })
+
+  orca.slashCommands.registerSlashCommand(`${pluginName}.directionForward`, {
+    icon: "ti ti-arrow-right",
+    group: "SRS",
+    title: "创建正向方向卡 → (光标位置分隔问答)",
+    command: `${pluginName}.createDirectionForward`
+  })
+
+  orca.slashCommands.registerSlashCommand(`${pluginName}.directionBackward`, {
+    icon: "ti ti-arrow-left",
+    group: "SRS",
+    title: "创建反向方向卡 ← (光标位置分隔问答)",
+    command: `${pluginName}.createDirectionBackward`
+  })
+
+  // ============ AI 卡片斜杠命令 ============
+
+  orca.slashCommands.registerSlashCommand(`${pluginName}.aiCard`, {
+    icon: "ti ti-robot",
+    group: "SRS",
+    title: "AI 生成记忆卡片",
+    command: `${pluginName}.makeAICard`
+  })
+
+  orca.slashCommands.registerSlashCommand(`${pluginName}.interactiveAI`, {
+    icon: "ti ti-sparkles",
+    group: "SRS",
+    title: "AI 智能制卡（交互式）",
+    command: `${pluginName}.interactiveAICard`
+  })
+
+  // ============ 渐进阅读斜杠命令 ============
+
+  orca.slashCommands.registerSlashCommand(`${pluginName}.ir`, {
+    icon: "ti ti-book-2",
+    group: "SRS",
+    title: "IR：创建 Topic 卡片",
+    command: `${pluginName}.createTopicCard`
+  })
+
+  orca.slashCommands.registerSlashCommand(`${pluginName}.incrementalReading`, {
+    icon: "ti ti-book-2",
+    group: "SRS",
+    title: "渐进阅读",
+    command: `${pluginName}.startIncrementalReadingSession`
+  })
+
+  orca.slashCommands.registerSlashCommand(`${pluginName}.ir_record`, {
+    icon: "ti ti-bookmark",
+    group: "SRS",
+    title: "ir_record",
+    command: `${pluginName}.irRecordProgress`
+  })
+}
+
+export function unregisterUIComponents(pluginName: string): void {
+  orca.headbar.unregisterHeadbarButton(`${pluginName}.aiDialogMount`)
+  orca.headbar.unregisterHeadbarButton(`${pluginName}.irBookDialogMount`)
+  
+  orca.headbar.unregisterHeadbarButton(`${pluginName}.reviewButton`)
+  orca.headbar.unregisterHeadbarButton(`${pluginName}.flashHomeButton`)
+  orca.headbar.unregisterHeadbarButton(`${pluginName}.incrementalReadingButton`)
+  
+  // 工具栏按钮
+  orca.toolbar.unregisterToolbarButton(`${pluginName}.clozeButton`)
+  orca.toolbar.unregisterToolbarButton(`${pluginName}.clearClozeButton`)
+  orca.toolbar.unregisterToolbarButton(`${pluginName}.clozeSameNumberButton`)
+  
+  // 斜杠命令
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.makeCard`)
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.listCard`)
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.directionForward`)
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.directionBackward`)
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.aiCard`)
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.interactiveAI`)
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.ir`)
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.incrementalReading`)
+  orca.slashCommands.unregisterSlashCommand(`${pluginName}.ir_record`)
+}
