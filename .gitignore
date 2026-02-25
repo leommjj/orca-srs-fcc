@@ -1,0 +1,41 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.serena/project.yml
+.serena/cache/typescript/document_symbols_cache_v23-06-25.pkl
+.serena/cache/typescript/document_symbols_cache_v23-06-25.pkl
+.gitignore
+.gitignore
+.serena/cache/typescript/document_symbols_cache_v23-06-25.pkl
+.serena/memories/suggested_commands.md
+.serena/memories/style_conventions.md
+.serena/memories/task_completion_checklist.md
+.serena/memories/project_overview.md
+.serena/cache/typescript/document_symbols_cache_v23-06-25.pkl
+
+# YoYo AI version control directory
+.yoyo/
+create-release.bat
+deploy.bat
+dist.zip
