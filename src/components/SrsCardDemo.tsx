@@ -1,4 +1,4 @@
-﻿/**
+/**
  * SRS 卡片组件
  *
  * 题目与答案区域直接嵌入 Orca Block，用户可以像在正文中一样编辑，
@@ -547,7 +547,7 @@ export default function SrsCardDemo({
 
   // 确定 reprType
   const reprType =
-    inferredCardType === "cloze"
+    inferredCardType === "cloze" || inferredCardType === "bg"
       ? "srs.cloze-card"
       : inferredCardType === "direction"
       ? "srs.direction-card"
@@ -668,6 +668,7 @@ export default function SrsCardDemo({
           panelId={panelId}
           pluginName={pluginName}
           clozeNumber={clozeNumber} // 传递填空编号
+          cardType={inferredCardType} // 传递卡片类型
         />
       </SrsErrorBoundary>
     );

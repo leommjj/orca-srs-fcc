@@ -10,6 +10,7 @@
 import type { ContentFragment } from "../orca.d.ts"
 
 const { useRef, useState } = window.React
+const { ModalOverlay } = orca.components
 
 interface ClozeInlineRendererProps {
   blockId: string
@@ -68,18 +69,12 @@ export default function ClozeInlineRenderer({
 
       {/* 序号修改弹窗 */}
       {showModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 10000
-        }}>
+        <ModalOverlay
+          visible={showModal}
+          canClose={true}
+          onClose={() => setShowModal(false)}
+          className="srs-cloze-edit-modal"
+        >
           <div style={{
             backgroundColor: 'white',
             padding: '20px',
@@ -187,7 +182,7 @@ export default function ClozeInlineRenderer({
               </button>
             </div>
           </div>
-        </div>
+        </ModalOverlay>
       )}
     </>
   )

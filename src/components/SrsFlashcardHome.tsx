@@ -410,7 +410,7 @@ function CardListItem({ card, panelId, onCardClick, onCardReset, onCardDelete }:
 
       {/* 卡片内容预览 */}
       <div style={{ minHeight: "24px" }}>
-        <SafeBlockPreview blockId={card.id} panelId={panelId} />
+        <SafeBlockPreview blockId={card.id} panelId={panelId} cardType={card.cardType} />
       </div>
 
       {/* 卡片状态和操作 */}
